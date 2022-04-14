@@ -1,21 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import { useStore } from 'effector-react';
+import React, { useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Layout from './components/Layout';
+import { $isAuthenticated, initAuthFx } from './features/auth/auth.model';
+import Index from './pages';
+import Categories from './pages/categories';
+import Login from './pages/login';
+import Users from './pages/users';
 
 function App() {
-  const [a, setCount] = useState(0);
+  const isAuthenticated = useStore($isAuthenticated);
 
   useEffect(() => {
-    setCount(10);
+    initAuthFx();
   }, []);
 
   return (
-    <>
-      <header>Header</header>
-      <main className="p-3">Main</main>
-      <button type="button" onClick={() => setCount((c) => c + 1)}>
-        {a}
-      </button>
-      <a href="asdf">asdf</a>
-    </>
+    <Layout>
+      <Routes>
+        {!isAuthenticated && <Route path="/login" element={<Login />}></Route>}
+        <Route path="/" element={<Index />}></Route>
+        <Route path="/categories" element={<Categories />}></Route>
+        <Route path="/users" element={<Users />}></Route>
+        <Route path="/applications" element={<Index />}></Route>
+      </Routes>
+    </Layout>
   );
 }
 

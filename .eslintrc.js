@@ -18,24 +18,22 @@ module.exports = {
     },
   },
   extends: [
-    'plugin:effector/recommended',
-    'plugin:effector/scope',
+    "eslint:recommended",
     'plugin:@typescript-eslint/recommended',
     'plugin:jsx-a11y/recommended',
     'plugin:react/recommended',
+    'plugin:effector/recommended',
+    'plugin:effector/scope',
   ],
   parserOptions: {
-    ecmaVersion: 2021,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
+    project: ["./tsconfig.json"]
   },
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
     'import/extensions': 'off',
     'no-console': 1,
     'prettier/prettier': 0,
-    'no-unused-vars': 'error',
-  },
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error"
+  }
 };
