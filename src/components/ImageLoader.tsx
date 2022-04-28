@@ -5,7 +5,7 @@ import { CloudFile } from '../types';
 
 type Props = {
   image?: CloudFile;
-  onChange: (data: CloudFile) => void;
+  onChange: (data: CloudFile | null) => void;
 };
 
 const ImageLoader = ({ image, onChange }: Props) => {
@@ -13,8 +13,6 @@ const ImageLoader = ({ image, onChange }: Props) => {
   const [_image, setImage] = useState<CloudFile | null>(image || null);
 
   useEffect(() => {
-    console.log(image);
-
     onChange(_image);
   }, [_image]);
 

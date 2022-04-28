@@ -1,6 +1,7 @@
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Button,
+  Checkbox,
   IconButton,
   Image,
   Tbody,
@@ -14,12 +15,14 @@ import React, { useEffect } from 'react';
 import SmartTable from '../components/SmartTable/SmartTable';
 import {
   $categories,
+  $filters,
   $page,
   $total,
   changePage,
   deleteCategoryFx,
   editCategoryFromTable,
   PER_PAGE,
+  setFilters,
   toggleModal,
 } from '../features/categories/categories.model';
 import { CreateCategoryModal } from '../features/categories/components';
@@ -27,19 +30,39 @@ import { CreateCategoryModal } from '../features/categories/components';
 const Categories = () => {
   const categories = useStore($categories);
   const total = useStore($total);
+  const filters = useStore($filters);
   const page = useStore($page);
 
   useEffect(() => {
     changePage(0);
   }, []);
 
+  const handleParentCheckboxChange = () => {
+    const { parentCategory, ...rest } = filters;
+
+    if (parentCategory) {
+      setFilters(rest);
+    } else {
+      setFilters({ ...rest, parentCategory: 'null' });
+    }
+  };
+
   return (
     <div className="container px-4 mx-auto">
-      <div className="flex my-4">
+      <div className="flex gap-4 my-4 ">
         <Button onClick={() => toggleModal()} colorScheme={'blue'}>
           Добавить категорию
         </Button>
         <CreateCategoryModal />
+        <Checkbox
+          isChecked={filters.parentCategory === 'null'}
+          onChange={handleParentCheckboxChange}
+          size="md"
+          colorScheme="blue"
+          defaultChecked
+        >
+          Показать только родительские категории
+        </Checkbox>
       </div>
 
       <SmartTable
@@ -52,6 +75,7 @@ const Categories = () => {
       >
         <Thead>
           <Tr>
+            <Th>Номер</Th>
             <Th>Название</Th>
             <Th>Изображение</Th>
             <Th>Родительская категория</Th>
@@ -61,6 +85,7 @@ const Categories = () => {
         <Tbody>
           {categories.map((category) => (
             <Tr key={category.id}>
+              <Td>{category.id}</Td>
               <Td>{category.name}</Td>
               <Td>
                 {category.image === null ? (

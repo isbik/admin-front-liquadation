@@ -12,12 +12,22 @@ const Navigation = () => {
   };
 
   return (
-    <Box className="flex items-center gap-4 p-4" bgColor={'lightblue'}>
-      <NavLink to="/categories">Категории</NavLink>
-      <NavLink to="/applications">Заявки</NavLink>
-      <NavLink to="/users">Пользователи</NavLink>
+    <Box className="flex items-center gap-4 p-4 text-white bg-blue-700">
+      <NavLink
+        // className={(isActive) => (isActive ? ' font-bold' : '')}
+        to="/categories"
+      >
+        Категории
+      </NavLink>
+      <NavLink
+        // className={(isActive) => (isActive ? ' font-bold' : '')}
+        to="/users"
+      >
+        Пользователи
+      </NavLink>
+      {/* <NavLink to="/applications">Заявки</NavLink> */}
 
-      <Button onClick={handleLogout} className="ml-auto">
+      <Button onClick={handleLogout} className="ml-auto" colorScheme={'blue'}>
         Выйти
       </Button>
     </Box>

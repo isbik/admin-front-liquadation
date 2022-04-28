@@ -18,18 +18,26 @@ export type Category = {
 const PER_PAGE = 10;
 
 const changePage = createEvent<number>();
+const setFilters = createEvent<Record<string, any>>();
 
 const $categories = createStore<Category[]>([]);
 const $total = createStore<number>(0);
-const $page = restore(changePage, 0);
+const $page = restore(changePage, 0).reset(setFilters);
+const $filters = createStore<Record<string, any>>({}).on(
+  setFilters,
+  (_, payload) => payload,
+);
 
 const fetchCategoriesFx = createEffect<void, Paginated<Category>>();
 
-fetchCategoriesFx.use(async ([page]) => {
+fetchCategoriesFx.use(async ({ page, filters }) => {
   const response = await api.get<Paginated<Category>>('/categories', {
     params: {
       limit: PER_PAGE,
       offset: PER_PAGE * page,
+      orderBy: 'id',
+      orderSort: -1,
+      ...filters,
     },
   });
 
@@ -37,8 +45,9 @@ fetchCategoriesFx.use(async ([page]) => {
 });
 
 sample({
-  clock: [changePage],
-  source: [$page],
+  clock: [changePage, setFilters],
+  source: [$page, $filters],
+  fn: ([page, filters]) => ({ page, filters }),
   target: fetchCategoriesFx,
 });
 
@@ -177,4 +186,6 @@ export {
   PER_PAGE,
   $categoryImage,
   changeCategoryImage,
+  $filters,
+  setFilters,
 };

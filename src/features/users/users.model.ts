@@ -17,13 +17,15 @@ const $users = createStore<User[]>([]);
 const $total = createStore<number>(0);
 const $page = restore<number>(changePage, 0);
 
-const fetchUsersFx = createEffect<[number], Paginated<User>>();
+const fetchUsersFx = createEffect<{ page: number }, Paginated<User>, void>();
 
-fetchUsersFx.use(async ([page]) => {
+fetchUsersFx.use(async ({ page }) => {
   const response = await api.get<Paginated<User>>('/users', {
     params: {
       limit: PER_PAGE,
       offset: PER_PAGE * page,
+      sortBy: 'id',
+      sortOrder: 'desc',
     },
   });
 
@@ -33,6 +35,7 @@ fetchUsersFx.use(async ([page]) => {
 sample({
   clock: [changePage],
   source: [$page],
+  fn: ([page]) => ({ page }),
   target: fetchUsersFx,
 });
 

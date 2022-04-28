@@ -24,6 +24,7 @@ const Users = () => {
 
   return (
     <div className="container px-4 mx-auto">
+      <h1 className="my-4 text-2xl font-bold">Пользователи</h1>
       <SmartTable
         onChange={({ page }) => changePage(page)}
         pagination={{
@@ -34,8 +35,9 @@ const Users = () => {
       >
         <Thead>
           <Tr>
-            <Th>Status</Th>
             <Th>id</Th>
+            <Th>Actions</Th>
+            <Th>Status</Th>
             <Th>organizationName</Th>
             <Th>INN</Th>
             <Th>KPP</Th>
@@ -55,51 +57,54 @@ const Users = () => {
         <Tbody>
           {users.map((user) => (
             <Tr key={user.id}>
+              <Td>{user.id}</Td>
+
               <Td>
                 <div className="flex flex-col items-center gap-2 font-bold">
-                  {user.emailStatus}
-
                   <div>
-                    {[
-                      UserEmailStatus.blocked,
-                      UserEmailStatus.verification,
-                    ].includes(user.emailStatus) && (
-                      <IconButton
-                        className="mr-2"
-                        size={'sm'}
-                        aria-label="edit"
-                        colorScheme="green"
-                        icon={<CheckIcon />}
-                        onClick={() =>
-                          changeUserStatus({
-                            userId: user.id,
-                            status: UserEmailStatus.active,
-                          })
-                        }
-                      />
-                    )}
-                    {[
-                      UserEmailStatus.active,
-                      UserEmailStatus.verification,
-                    ].includes(user.emailStatus) && (
-                      <IconButton
-                        onClick={() =>
-                          changeUserStatus({
-                            userId: user.id,
-                            status: UserEmailStatus.blocked,
-                          })
-                        }
-                        size={'sm'}
-                        aria-label="delete"
-                        colorScheme="red"
-                        variant={'ghost'}
-                        icon={<LockIcon />}
-                      />
-                    )}
+                    <IconButton
+                      className="mr-2"
+                      size={'sm'}
+                      aria-label="edit"
+                      colorScheme="green"
+                      icon={<CheckIcon />}
+                      disabled={
+                        ![
+                          UserEmailStatus.blocked,
+                          UserEmailStatus.verification,
+                        ].includes(user.emailStatus)
+                      }
+                      onClick={() =>
+                        changeUserStatus({
+                          userId: user.id,
+                          status: UserEmailStatus.active,
+                        })
+                      }
+                    />
+                    <IconButton
+                      disabled={
+                        ![
+                          UserEmailStatus.active,
+                          UserEmailStatus.verification,
+                        ].includes(user.emailStatus)
+                      }
+                      onClick={() =>
+                        changeUserStatus({
+                          userId: user.id,
+                          status: UserEmailStatus.blocked,
+                        })
+                      }
+                      size={'sm'}
+                      aria-label="delete"
+                      colorScheme="red"
+                      variant={'ghost'}
+                      icon={<LockIcon />}
+                    />
                   </div>
                 </div>
               </Td>
-              <Td>{user.id}</Td>
+              <Td>{user.emailStatus}</Td>
+
               <Td>{user.organizationName}</Td>
               <Td>{user.INN}</Td>
               <Td>{user.KPP}</Td>
